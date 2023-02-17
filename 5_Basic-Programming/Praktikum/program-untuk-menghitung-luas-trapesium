@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func main() {
+	a := 5  // Sisi atas
+	b := 8  // Sisi bawah
+	t := 10 // Tinggi
+
+	// Hitung luas trapesium
+	var L int = (a + b) * t / 2
+
+	// Cetak hasil
+	fmt.Println(L)
+}
