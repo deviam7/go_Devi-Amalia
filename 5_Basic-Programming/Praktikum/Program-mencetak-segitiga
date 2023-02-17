@@ -1,0 +1,20 @@
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var nilai int = 5
+	fmt.Scanln(&nilai)
+
+	for i := 1; i <= nilai; i++ {
+		for j := 1; j <= nilai-i; j++ {
+			fmt.Print(" ")
+		}
+		for k := 1; k <= 2*i-1; k++ {
+			fmt.Print("*")
+		}
+		fmt.Println()
+	}
+}
