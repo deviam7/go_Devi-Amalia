@@ -1,0 +1,17 @@
+package main
+
+import "fmt"
+
+func main() {
+	var num int = 26
+	fmt.Print("Masukkan sebuah bilangan: ")
+	fmt.Scanln(&num)
+
+	fmt.Println("Faktor-faktor dari bilangan", num, "adalah:")
+
+	for i := 1; i <= num; i++ {
+		if num%i == 0 {
+			fmt.Println(i)
+		}
+	}
+}
