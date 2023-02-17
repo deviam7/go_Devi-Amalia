@@ -1,0 +1,14 @@
+package main
+
+import "fmt"
+
+func main() {
+	var number int = 4
+	fmt.Scanln(&number)
+
+	if number%2 == 0 {
+		fmt.Printf("%d adalah bilangan genap\n", number)
+	} else {
+		fmt.Printf("%d adalah bilangan ganjil\n", number)
+	}
+}
