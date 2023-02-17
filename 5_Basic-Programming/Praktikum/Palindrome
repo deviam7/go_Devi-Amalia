@@ -1,0 +1,31 @@
+package main
+
+import (
+    "fmt"
+    "strings"
+)
+
+func checkPalindrome(word string) bool {
+    str := strings.Replace(word, " ", "", -1)
+    //reverse the word
+    revWord := ""
+    for i := len(str) - 1; i >= 0; i-- {
+        revWord += string(str[i])
+    }
+    //check if the word and the reversed word are the same
+    if strings.EqualFold(str, revWord) {
+        return true
+    }
+    return false
+}
+
+func main() {
+    var input string
+    fmt.Print("Masukkan kata: ")
+    fmt.Scan(&input)
+    if checkPalindrome(input) {
+        fmt.Println("Kata tersebut adalah palindrome")
+    } else {
+        fmt.Println("Kata tersebut bukan palindrome")
+    }
+}
