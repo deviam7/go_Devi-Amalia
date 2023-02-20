@@ -12,7 +12,7 @@ func checkPalindrome(word string) bool {
     for i := len(str) - 1; i >= 0; i-- {
         revWord += string(str[i])
     }
-    //check if the word and the reversed word are the same
+
     if strings.EqualFold(str, revWord) {
         return true
     }
