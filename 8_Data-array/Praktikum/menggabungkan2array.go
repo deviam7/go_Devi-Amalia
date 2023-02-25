@@ -20,7 +20,6 @@ func ArrayMerge(arrayA, arrayB []string) []string {
 	return mergedArray
 }
 
-// contains checks if a value is present in an array
 func contains(array []string, value string) bool {
 	for _, v := range array {
 		if v == value {
@@ -32,7 +31,6 @@ func contains(array []string, value string) bool {
 }
 
 func main() {
-	// Test cases
 	fmt.Println(ArrayMerge([]string{"king", "devil jin", "akuma"}, []string{"eddie", "steve", "geese"}))
 	fmt.Println(ArrayMerge([]string{"sergei", "jin"}, []string{"jin", "steve", "bryan"}))
 	fmt.Println(ArrayMerge([]string{"alisa", "yoshimitsu"}, []string{"devil jin", "yoshimitsu", "bryan"}))
