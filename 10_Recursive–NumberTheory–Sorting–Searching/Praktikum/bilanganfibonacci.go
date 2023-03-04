@@ -14,12 +14,8 @@ func fibonacci(number int) int {
 
 func main() {
 	fmt.Println(fibonacci(0))
-	fmt.Println(fibonacci(1))
 	fmt.Println(fibonacci(2))
-	fmt.Println(fibonacci(3))
-	fmt.Println(fibonacci(5))
-	fmt.Println(fibonacci(6))
-	fmt.Println(fibonacci(7))
 	fmt.Println(fibonacci(9))
 	fmt.Println(fibonacci(10))
+	fmt.Println(fibonacci(12))
 }
