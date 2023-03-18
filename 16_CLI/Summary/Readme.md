@@ -1,0 +1,5 @@
+Command-line interface (CLI) adalah antarmuka pengguna yang memungkinkan pengguna untuk berinteraksi dengan komputer melalui baris perintah teks. Pengguna dapat memasukkan perintah atau instruksi teks ke dalam terminal atau prompt perintah dan komputer akan mengeksekusi perintah tersebut.
+
+CLI sering digunakan dalam lingkungan pengembangan dan sistem operasi seperti Unix dan Linux, serta dalam bahasa pemrograman seperti Python dan Ruby. Dalam CLI, pengguna dapat mengakses dan mengontrol berbagai aspek sistem operasi dan perangkat lunak, termasuk manajemen file, pengaturan jaringan, dan konfigurasi sistem.
+
+Keuntungan penggunaan CLI antara lain kemampuan untuk mengotomatisasi tugas, meningkatkan produktivitas, dan menghemat waktu. Namun, CLI juga memiliki kurva pembelajaran yang lebih tinggi dan memerlukan pengetahuan teknis yang lebih mendalam dibandingkan dengan antarmuka pengguna grafis (GUI) yang lebih umum digunakan.
