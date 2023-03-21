@@ -1,0 +1,3 @@
+System Design adalah proses merancang sistem atau aplikasi untuk memenuhi kebutuhan bisnis atau pengguna. Ini melibatkan identifikasi masalah, menentukan solusi yang paling efektif, serta merancang dan mengimplementasikan solusi tersebut.
+
+System Design bertujuan untuk menciptakan solusi yang efektif dan efisien untuk memenuhi kebutuhan bisnis atau pengguna. Hal ini melibatkan pemahaman yang mendalam tentang masalah yang harus dipecahkan, serta kemampuan untuk merancang dan mengimplementasikan solusi yang tepat.

@@ -1,0 +1,3 @@
+RESTful API (Application Programming Interface) adalah metode untuk mengakses data dan layanan web melalui protokol HTTP. REST (Representational State Transfer) mengacu pada arsitektur web yang menyediakan cara standar untuk berkomunikasi antara client dan server. RESTful API menggunakan metode HTTP untuk membaca (GET), menulis (POST), mengubah (PUT), dan menghapus (DELETE) data.
+
+RESTful API berfokus pada sumber daya (resource) yang dikelola oleh aplikasi. Sumber daya tersebut diidentifikasi oleh URL (Uniform Resource Locator) dan dapat berupa data, file, atau layanan. RESTful API menggunakan format data yang umum seperti JSON (JavaScript Object Notation) atau XML (Extensible Markup Language) untuk mengirim dan menerima data antara client dan server.
