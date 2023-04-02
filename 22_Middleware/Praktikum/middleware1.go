@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/dgrijalva/jwt-go"
 )
 
 var (
@@ -37,30 +37,29 @@ func BasicAuth(username, password string, c echo.Context) (bool, error) {
 
 func JWTMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-	tokenString := c.Request().Header.Get("Authorization")
-	if tokenString == "" {
-	return echo.NewHTTPError(http.StatusUnauthorized, "Token tidak ditemukan")
-	}
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Metode auth tidak valid")
+		tokenString := c.Request().Header.Get("Authorization")
+		if tokenString == "" {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Token tidak ditemukan")
 		}
-		return []byte("secret"), nil // Ganti "secret" dengan string random yang aman
-	})
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("Metode auth tidak valid")
+			}
+			return []byte("secret"), nil // Ganti "secret" dengan string random yang aman
+		})
 
-	if err != nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
-	}
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
+		}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		c.Set("email", claims["email"].(string))
-		return next(c)
-	} else {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Token tidak valid")
+		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			c.Set("email", claims["email"].(string))
+			return next(c)
+		} else {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Token tidak valid")
+		}
 	}
 }
-}
-
 
 func InitDB() {
 	config := Config{
@@ -98,7 +97,7 @@ func InitialMigration() {
 }
 
 func GetUsersController(c echo.Context) error {
-	var users []User
+	var users []user
 
 	if err := DB.Find(&users).Error; err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -161,42 +160,45 @@ func DeleteUserController(c echo.Context) error {
 func UpdateUserController(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-	return echo.NewHTTPError(http.StatusBadRequest, "id pengguna tidak valid")
+		return echo.NewHTTPError(http.StatusBadRequest, "id pengguna tidak valid")
 	}
 	var user User
-if err := DB.First(&user, id).Error; err != nil {
-	return echo.NewHTTPError(http.StatusBadRequest, "pengguna tidak ditemukan")
+	if err := DB.First(&user, id).Error; err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "pengguna tidak ditemukan")
+	}
+
+	c.Bind(&user)
+
+	if err := DB.Save(&user).Error; err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "berhasil memperbarui pengguna",
+		"user":    user,
+	})
+
 }
 
-c.Bind(&user)
+func main() {
+	InitDB()
+	e := echo.New()
 
-if err := DB.Save(&user).Error; err != nil {
-	return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	// middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(JWTMiddleware)
+
+	// initial migration
+	InitialMigration()
+
+	// routes
+	e.GET("/users", GetUsersController)
+	e.GET("/users/:id", GetUserController)
+	e.POST("/users", CreateUserController)
+	e.PUT("/users/:id", UpdateUserController)
+	e.DELETE("/users/:id", DeleteUserController)
+
+	// server
+	e.Logger.Fatal(e.Start(":8998"))
 }
-
-return c.JSON(http.StatusOK, map[string]interface{}{
-	"message": "berhasil memperbarui pengguna",
-	"user":    user,
-})
-
-}
-
-e := echo.New()
-
-// middleware
-e.Use(middleware.Logger())
-e.Use(middleware.Recover())
-e.Use(JWTMiddleware)
-
-// initial migration
-InitialMigration()
-
-// routes
-e.GET("/users", GetUsersController)
-e.GET("/users/:id", GetUserController)
-e.POST("/users", CreateUserController)
-e.PUT("/users/:id", UpdateUserController)
-e.DELETE("/users/:id", DeleteUserController)
-
-// server
-e.Logger.Fatal(e.Start(":8998"))
