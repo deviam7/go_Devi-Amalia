@@ -1,0 +1,51 @@
+mkdir -p .github/workflows
+touch .github/workflows/main.yml
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: go mod download
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v ./...
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Deploy to your_server
+      run: |
+        scp your_binary your_user@your_server:~/path/to/destination
+        ssh your_user@your_server 'systemctl restart your_service'
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
