@@ -1,22 +1,24 @@
-# Menggunakan base image dari Golang versi 1.16
-FROM golang:1.16
+# Use the official Golang image to create a build artifact.
+# This is based on Debian and sets the GOPATH to /go.
+# https://hub.docker.com/_/golang
+FROM golang:1.17 AS builder
 
-# Setelah membuat Dockerfile, buat direktori kerja di dalam container
+# Copy local code to the container image.
 WORKDIR /app
-
-COPY go.mod go.sum ./
-
-RUN go mod download
-
-# Copy seluruh file yang dibutuhkan aplikasi ke dalam container
 COPY . .
 
-# Build aplikasi Golang di dalam container
+# Download and install any required dependencies.
+RUN go mod download
+
+# Build the binary.
 RUN go build -o miniproject .
 
-# Expose port yang akan digunakan untuk mengakses aplikasi
-EXPOSE 8080
+# Use a minimal alpine image to run the binary.
+# https://hub.docker.com/_/alpine
+FROM alpine:3.14
+RUN apk add --no-cache ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/miniproject .
 
-# Menjalankan aplikasi di dalam container
+# Run the binary.
 CMD ["./miniproject"]
-
