@@ -28,7 +28,7 @@ func AddPayment(newPayment models.NewPayment, total, change int) (*models.Paymen
 			Type:          newPayment.Type,
 			Pay:           newPayment.Pay,
 			Change:        change,
-			DateTime:      time.Now().String(),
+			DateTime:      time.Now().Format("2006-01-02 15:04:05"),
 		}
 	)
 

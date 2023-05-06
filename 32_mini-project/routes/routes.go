@@ -23,4 +23,6 @@ func SetupRoutes(e *echo.Echo) {
 	e.POST("/payment", controllers.MakePayment, middlewares.AuthMiddleware)
 
 	e.GET("/receipt/:payment_id", controllers.MakeReceipt, middlewares.AuthMiddleware)
+
+	e.GET("/list_category", controllers.GetListCategory, middlewares.AuthMiddleware)
 }
