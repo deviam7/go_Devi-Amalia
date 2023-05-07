@@ -82,5 +82,8 @@ func AddTransaction(c echo.Context) error {
 		})
 	}
 
-	return c.NoContent(http.StatusCreated)
+	return c.JSON(http.StatusOK, echo.Map{
+		"message":        "Transaksi berhasil",
+		"transaction_id": transaction.ID,
+	})
 }

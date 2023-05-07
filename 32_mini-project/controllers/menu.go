@@ -60,7 +60,9 @@ func AddMenu(c echo.Context) error {
 		})
 	}
 
-	return c.NoContent(http.StatusCreated)
+	return c.JSON(http.StatusOK, echo.Map{
+		"message": "Menu berhasil ditambahkan",
+	})
 }
 
 func EditMenu(c echo.Context) error {
@@ -87,5 +89,7 @@ func EditMenu(c echo.Context) error {
 		})
 	}
 
-	return c.NoContent(http.StatusOK)
+	return c.JSON(http.StatusOK, echo.Map{
+		"message": "Menu berhasil diubah",
+	})
 }

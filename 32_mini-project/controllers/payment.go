@@ -42,24 +42,24 @@ func MakePayment(c echo.Context) error {
 
 	if newPayment.Pay < transaction.Total {
 		return c.JSON(http.StatusBadRequest, echo.Map{
-			"error": "Total not enough",
+			"error": "Jumlah pembayaran kurang",
 		})
 	}
 
-	// Handle payment
+	// Menghandle pembayaran
 	var change int
 	if newPayment.Type == "cash" {
-		// Calculate change
+		// Menghitung kembalian
 		change = newPayment.Pay - transaction.Total
-	} else if newPayment.Type == "credit_card" {
+	} else if newPayment.Type == "credit_card" || newPayment.Type == "debit" || newPayment.Type == "qris" {
 		if transaction.Total != newPayment.Pay {
 			return c.JSON(http.StatusBadRequest, echo.Map{
-				"error": "amount must be same for paying with credit card",
+				"error": "Jumlah pembayaran harus sama untuk pembayaran dengan " + newPayment.Type,
 			})
 		}
 	} else {
 		return c.JSON(http.StatusBadRequest, echo.Map{
-			"error": "Invalid payment type",
+			"error": "Jenis pembayaran tidak valid",
 		})
 	}
 
@@ -71,8 +71,8 @@ func MakePayment(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{
-		"total":  newPayment.Pay,
-		"change": change,
+		"Pay":  newPayment.Pay,
+		"Change": change,
 	})
 }
 
@@ -110,8 +110,15 @@ func MakeReceipt(c echo.Context) error {
 	pdf := gofpdf.New(gofpdf.OrientationPortrait, gofpdf.UnitPoint, gofpdf.PageSizeLetter, "")
 	pdf.AddPage()
 	pdf.SetFont("Arial", "B", 16)
+	pdf.Cell(40, h, fmt.Sprintf("No: %d", payment.ID))
+	pdf.Ln(12)
+	h += 20
+	pdf.Cell(40, h, payment.DateTime)
+	pdf.Ln(12)
+	h += 20
 	pdf.Cell(40, h, "Receipt:")
 	pdf.Ln(12)
+	h += 20
 
 	for _, transactionMenu := range transactionMenus {
 		for _, menu := range menus {

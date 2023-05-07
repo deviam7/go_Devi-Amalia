@@ -75,6 +75,7 @@ func GetMenuByCategoryID(categoryID int) ([]*models.Menu, error) {
 	return menus, nil
 }
 
+
 func GetMenuByID(id int) (*models.Menu, error) {
 	var (
 		db   = config.GetDB()

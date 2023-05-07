@@ -23,8 +23,8 @@ func AddTransaction(total int) (*models.Transaction, error) {
 	var (
 		db          = config.GetDB()
 		transaction = models.Transaction{
-			Total:   total,
-			DateTime: time.Now().String(),
+			Total:    total,
+			DateTime: time.Now().Format("2006-01-02 15:04:05"),
 		}
 	)
 
