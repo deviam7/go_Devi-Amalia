@@ -1,0 +1,65 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.19
+
+    - name: Build
+      run: |
+        go mod download
+        go build -o main
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.CS_DOCKER_USER }}
+        password: ${{ secrets.CS_DOCKER_TOKEN }}
+
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t deviapp-repo .
+        docker tag deviapp-repo:latest deviam7/deviapp-repo:latest
+        docker push deviam7/deviapp-repo:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install doctl
+      run: |
+        curl -L https://github.com/digitalocean/doctl/releases/download/v1.64.0/doctl-1.64.0-linux-amd64.tar.gz | tar xvz
+        sudo mv doctl /usr/local/bin
+
+    - name: Setup SSH with passphrase
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.CS_SERVER_RSA }}
+        SSH_PASSPHRASE: ${{ secrets.CS_SERVER_PASSPHRASE }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > private_key
+        chmod 600 private_key
+        ssh-keygen -p -P "$SSH_PASSPHRASE" -N "" -f private_key
+        mkdir -p ~/.ssh
+        ssh-agent sh -c 'ssh-add private_key && echo "Identity added: $(ssh-add -L)"'
+    
+
+    - name: Deploy to Digital Ocean
+      env:
+        DROPLET_ID: deviapp
+      run: |
+        doctl auth init --access-token ${{ secrets.CS_DIGITAL_OCEAN_ACCESS_TOKEN }}
+        doctl compute ssh $DROPLET_ID --ssh-command 'docker pull deviam7/deviapp-repo:latest'
+        doctl compute ssh $DROPLET_ID --ssh-command 'docker stop deviapp-repo-container || true'
+        doctl compute ssh $DROPLET_ID --ssh-command 'docker rm deviapp-repo-container || true'
+        doctl compute ssh $DROPLET_ID --ssh-command 'docker run -d --name deviapp-repo-container -p 8080:8080 --restart always deviam7/deviapp-repo:latest'

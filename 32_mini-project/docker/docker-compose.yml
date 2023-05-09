@@ -4,7 +4,7 @@ services:
     image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: ""
-      MYSQL_DATABASE: crud.go
+      MYSQL_DATABASE: miniproject
     ports:
       - "3306:3306"
   app:
@@ -17,4 +17,4 @@ services:
       DB_HOST: db:3306
       DB_USER: root
       DB_PASSWORD: ""
-      DB_NAME: crud.go
+      DB_NAME: miniproject
