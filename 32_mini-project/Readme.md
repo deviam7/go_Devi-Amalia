@@ -18,5 +18,5 @@ Bahasa Pemrograman: Go
 Database: MySQL - Dbeaver
 Framework: Echo
 ORM: GORM
-Server: AWS EC2
-Deployment: CI/CD dengan Jenkins atau GitLab CI
+Server: Digital Ocean
+Deployment: Docker dan Digital Ocean
